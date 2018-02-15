@@ -47,22 +47,23 @@
         visibility: visible;
 
         .mdl-notification {
-            opacity    : 1;
-            transition : $notification-swift-ease-in;
-            //transform  : translate3d(0, 0, 0) scale(1.0);
+            // opacity    : 1;
+            &.animation.last-state {
+                opacity    : 1;
+            }
         }
     }
 
     &.is-hidden {
         .mdl-notification {
-            // hidden
-            opacity    : 0;
-            transition     : $notification-swift-ease-out;
-            //transform      : translate3d(0, 100%, 0) scale(0.2);
         }
     }
 
     .mdl-notification {
+        &.animation.closed-state {
+            opacity    : 0;
+        }
+
         position: relative;
         box-sizing: border-box;
         background-color: white;
@@ -75,6 +76,7 @@
         align-items: flex-start; // ⇾
         flex-shrink: 0;  // min-height bug
 
+        opacity    : 0;
         min-height: 48px;
         min-width: $notification-width;
         max-width: $notification-width;
@@ -179,6 +181,10 @@
 
                     + span {
                         max-width: $notification-width - 62px;
+
+                        // If not set - Chrome on Mac is not able to calculate the right size
+                        min-width: 1px;
+
                         @include typo-body-1($usePreferred: true);
                         line-height: 130%;
                     }

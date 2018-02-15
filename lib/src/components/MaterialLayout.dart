@@ -467,6 +467,10 @@ class MaterialLayout extends MdlComponent {
 
         if (_screenSizeMediaQuery.matches) {
             element.classes.add(_cssClasses.IS_SMALL_SCREEN);
+
+            if (_drawer != null) {
+                _drawer.setAttribute('aria-hidden', 'true');
+            }
         }
         else {
             element.classes.remove(_cssClasses.IS_SMALL_SCREEN);
@@ -475,6 +479,10 @@ class MaterialLayout extends MdlComponent {
             if (_drawer != null) {
                 _drawer.classes.remove(_cssClasses.IS_DRAWER_OPEN);
                 obfuscator.classes.remove(_cssClasses.IS_DRAWER_OPEN);
+
+                if (element.classes.contains(_cssClasses.FIXED_DRAWER)) {
+                    _drawer.setAttribute('aria-hidden', 'false');
+                }
             }
         }
     }
@@ -589,15 +597,17 @@ class MaterialLayoutTab {
                 tab.append(rippleContainer);
             }
 
-            eventStreams.add(
-                tab.onClick.listen( (final dom.MouseEvent event) {
-                if(tab.attributes["href"].startsWith("#")) {
-                    event.preventDefault();
-                    event.stopPropagation();
+            if(! layout.tabBar.classes.contains(_cssClasses.TAB_MANUAL_SWITCH)) {
+                eventStreams.add(
+                    tab.onClick.listen((final dom.MouseEvent event) {
+                        if (tab.attributes["href"].startsWith("#")) {
+                            event.preventDefault();
+                            event.stopPropagation();
 
-                    _selectTab();
-                }
-            }));
+                            _selectTab();
+                        }
+                    }));
+            }
 
             //tab.show = _selectTab();
         }
@@ -647,6 +657,7 @@ class _MaterialLayoutCssClasses {
     final String HEADER_SCROLL = 'mdl-layout__header--scroll';
 
     final String FIXED_HEADER = 'mdl-layout--fixed-header';
+    final String FIXED_DRAWER = 'mdl-layout--fixed-drawer';
     final String OBFUSCATOR = 'mdl-layout__obfuscator';
 
     final String TAB_BAR = 'mdl-layout__tab-bar';
@@ -655,6 +666,7 @@ class _MaterialLayoutCssClasses {
     final String TAB_BAR_BUTTON = 'mdl-layout__tab-bar-button';
     final String TAB_BAR_LEFT_BUTTON = 'mdl-layout__tab-bar-left-button';
     final String TAB_BAR_RIGHT_BUTTON = 'mdl-layout__tab-bar-right-button';
+    final String TAB_MANUAL_SWITCH = 'mdl-layout__tab-manual-switch';
     final String PANEL = 'mdl-layout__tab-panel';
 
     final String NAVI_LINK = "mdl-navigation__link";

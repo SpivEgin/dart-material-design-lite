@@ -21,11 +21,14 @@ library mdldialog;
 
 import 'dart:html' as dom;
 import 'dart:async';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 import 'package:logging/logging.dart';
 import 'package:mustache/mustache.dart';
 import 'package:validate/validate.dart';
-import 'package:di/di.dart' as di;
+import 'package:dice/dice.dart' as di;
 
 import 'package:mdl/mdlcore.dart';
 import 'package:mdl/mdlcomponents.dart';
@@ -40,6 +43,8 @@ part "src/dialog/MaterialConfirmDialog.dart";
 
 part "src/dialog/MaterialSnackbar.dart";
 part "src/dialog/MaterialNotification.dart";
+part "src/dialog/MaterialDatePicker.dart";
+part "src/dialog/MaterialTimePicker.dart";
 
 part "src/dialog/components/MaterialDialogComponent.dart";
 

@@ -1,6 +1,6 @@
 name: mdl
 description: Material Design Lite for Dart
-version: 1.18.2
+version: 2.1.4
 author: Mike Mitterer <office@mikemitterer.at>
 homepage: http://www.material-design-lite.pub
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   browser: ^0.10.0
 
-  intl: ^0.14.0
+  intl: ^0.15.0
   validate: ^1.0.0
   browser_detect: ^1.0.0
 
@@ -26,19 +26,27 @@ dependencies:
 
   dnd: ^0.3.0
 
-  di: ^3.3.0
-
+  dice: ^1.7.0
+    # path: /Volumes/Daten/DevLocal/DevDart/dice
+    
   barback: ^0.15.0
+
+  path: ^1.4.0
+
+  l10n: ^1.0.0
+    # path: /Volumes/Daten/DevLocal/DevDart/L10N4Dart
 
 dev_dependencies:
   test: any
   args: any
   material_icons: any
-  path: any
   grinder: any
+  mdl_grinder:
+    git: https://github.com/MikeMitterer/dart-mdl-grinder
+    # path: /Volumes/Daten/DevLocal/DevDart/MaterialGrinder
 
 transformers:
-  - di
+#  - di
   - mdl
 
   - $dart2js:

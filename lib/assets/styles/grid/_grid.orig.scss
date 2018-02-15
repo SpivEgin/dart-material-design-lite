@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 //
 // NOTE: Some rules here are applied using duplicate selectors.
 // This is on purpose to increase their specificity when applied.
@@ -23,14 +22,22 @@
 //@import "../variables";
 
 .mdl-grid {
-  display: flex;
-  flex-flow: row wrap;
-  margin: 0 auto 0 auto;
-  align-items: stretch;
+    //display: flex;
+    //flex-flow: row wrap;
+    //align-items: stretch;
 
-  &.mdl-grid--no-spacing {
-    padding: 0;
-  }
+    display         : flex;
+    flex-direction  : row;
+    flex-wrap       : wrap;
+    justify-content : flex-start; // ⇾
+    align-content   : space-between; // ||
+    align-items     : flex-start; // ↓
+
+    margin          : 0 auto 0 auto;
+
+    &.mdl-grid--no-spacing {
+        padding : 0;
+    }
 }
 
 .mdl-cell {

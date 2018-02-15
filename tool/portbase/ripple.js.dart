@@ -15,7 +15,6 @@ import 'dart:math' as Math;
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
-
 ( /*function*/ () {
 
 /// Class constructor for Ripple MDL component.
@@ -100,9 +99,9 @@ void _downHandler(final html.Event event) {
 
       } else {
 
-        final clientX = event.clientX ? event.clientX : event.touches[0].clientX;
+        final clientX = event.clientX != undefined ? event.clientX : event.touches[0].clientX;
 
-        final clientY = event.clientY ? event.clientY : event.touches[0].clientY;
+        final clientY = event.clientY != undefined ? event.clientY : event.touches[0].clientY;
         x = Math.round(clientX - bound.left);
         y = Math.round(clientY - bound.top);
       }

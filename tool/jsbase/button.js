@@ -1,4 +1,4 @@
-/**
+  /**
  * @license
  * Copyright 2015 Google Inc. All Rights Reserved.
  *
@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 (function() {
   'use strict';
 

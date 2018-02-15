@@ -15,7 +15,6 @@ import 'dart:math' as Math;
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
-
 ( /*function*/ () {
 
 /// Class constructor for Radio MDL component.
@@ -76,7 +75,7 @@ void _onChange(final html.Event event) {
       // Different name == different group, so no point updating those.
       if (button.getAttribute('name') == _btnElement.getAttribute('name')) {
         if (typeof radios[i]['MaterialRadio'] != 'undefined') {
-            radios[i]['MaterialRadio']._updateClasses();
+          radios[i]['MaterialRadio']._updateClasses();
         }
       }
     }

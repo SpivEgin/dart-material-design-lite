@@ -26,13 +26,13 @@ class PropertyChangeEvent<T> {
     PropertyChangeEvent(this.value,this.oldValue);
 }
 
-@MdlComponentModel
+@Directive
 class ObservableProperty<T> {
     static const String _DEFAULT_NAME = "<undefinded>";
 
     final Logger _logger = new Logger('mdlobservable.ObservableProperty');
 
-    @MdlComponentModel
+    @Directive
     T _value;
 
     /// Always convert to double
@@ -98,6 +98,7 @@ class ObservableProperty<T> {
     void set value(final val) {
         final T old = _value;
 
+        // JS does not support double - so you have to specify treatAsDouble
         if(_value.runtimeType == double || _treatAsDouble ) {
 
             // Strange - but this avoids DA-Warning
@@ -121,6 +122,12 @@ class ObservableProperty<T> {
     }
 
     T get value => _value;
+
+    /// Mimics a function call
+    ///
+    /// final ObservableProperty<String> nrOfItems = new ObservableProperty<String>("");
+    /// nrOfItems(10)
+    void call(final val) { value = val; }
 
     /**
      * Observe values in your app
@@ -184,6 +191,7 @@ class ObservableProperty<T> {
     void _fire(final PropertyChangeEvent<T> event) {
         if(_name != ObservableProperty._DEFAULT_NAME) {  _logger.fine("Fireing $event from ${_name}...");  }
 
+        //_logger.info("onChange: ${_onChange}, hasListeners: ${_onChange ?.hasListener}");
         if(_onChange != null && _onChange.hasListener) {
             _onChange.add(event);
         }

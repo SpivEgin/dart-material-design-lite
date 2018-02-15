@@ -15,7 +15,6 @@ import 'dart:math' as Math;
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
-
 ( /*function*/ () {
 
 /// Class constructor for Data Table Card MDL component.
@@ -68,6 +67,9 @@ void _selectRow(final checkbox, row, opt_rows) {
 
         } else {
           row.classes.remove(_cssClasses.IS_SELECTED);
+          if (_headerCheckbox['MaterialCheckbox'].inputElement.checked) {
+            headerCheckbox['MaterialCheckbox'].uncheck();
+          }
         }
       };
     }
@@ -150,8 +152,7 @@ void init() {
       if (element.classes.contains(_cssClasses.SELECTABLE)) {
 
         final th = document.createElement('th');
-
-        final headerCheckbox = _createCheckbox(null, rows);
+        _headerCheckbox = createCheckbox(null, rows);
         th.append(headerCheckbox);
         firstHeader.parent.insertBefore(th, firstHeader);
 

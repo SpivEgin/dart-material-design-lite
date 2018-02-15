@@ -21,7 +21,7 @@ part of mdldirective;
 
 typedef ModelObserver ModelObserverBuilder(final MdlComponent component);
 
-@di.Injectable()
+@di.injectable
 class ModelObserverFactory {
     final Logger _logger = new Logger('mdldirective.ModelObserverFactory');
 
@@ -80,6 +80,11 @@ class ModelObserverFactory {
         setBuilderFor( MaterialSlider, (final MdlComponent component) {
             Validate.notNull(component);
             return new _SliderObserver._internal(component);
+        });
+
+        setBuilderFor( MaterialModel, (final MdlComponent component) {
+            Validate.notNull(component);
+            return new _HtmlElementObserver._internal(component);
         });
 
     }

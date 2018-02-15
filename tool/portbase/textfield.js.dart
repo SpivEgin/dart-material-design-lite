@@ -15,7 +15,6 @@ import 'dart:math' as Math;
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
-
 ( /*function*/ () {
 
 /// Class constructor for Textfield MDL component.
@@ -158,7 +157,10 @@ void checkValidity() {
 /// public
 ///   MaterialTextfield.prototype.checkDirty = /*function*/ () {
 void checkDirty() {
-    if (_input.value && _input.value.length > 0) {
+    if (
+      (_input.value && _input.value.length > 0) ||
+      (_input.placeholder.trim() != '')
+    ) {
       element.classes.add(_cssClasses.IS_DIRTY);
 
     } else {

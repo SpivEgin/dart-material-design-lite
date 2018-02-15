@@ -1,5 +1,25 @@
-# Material Design Lite for Dart
-> A GUI library and framework to develop web apps in Dart.  
+# Material Design for Dart
+> A User Interface Library / GUI-Framework to   
+> develop *__Progressive Web Apps (PWA)__* in Dart.  
+
+## Web
+[Homepage](http://www.material-design-lite.pub/) |
+[PUB](https://pub.dartlang.org/packages/mdl) |
+[Facebook](https://www.facebook.com/mdl4dart/) |
+[Kitchen Sink](http://styleguide.material-design-lite.pub/) |
+[GitHub]([https://github.com/MikeMitterer/dart-material-design-lite) |
+[GibtHub WebSite + Samples](https://github.com/MikeMitterer/dart-material-design-lite-site)
+
+## Version 2.0.x
+I switch from the old, unsupported DI-Package to [Dice](https://pub.dartlang.org/packages/dice)  
+It's awesome - check it out.
+
+## Material Components for web
+> Google switched from MaterialDesignLite to *[Material Components for web](https://github.com/material-components/material-components-web)*  
+> The Dart-Version makes the same move.
+> I'm working on **"Material Components for Dart"**   
+> Stay tuned - I'll make the move for you as smooth as possible.
+
 
 [www.material-design-lite.pub](http://www.material-design-lite.pub).
 
@@ -79,7 +99,7 @@ Please file feature requests and bugs at the [issue tracker](https://github.com/
 ## More links
 - [Material Design](http://www.google.com/design/spec/material-design/introduction.html)
 
-###License 
+### License 
 
     Copyright 2016 Michael Mitterer (office@mikemitterer.at),
     IT-Consulting and Development Limited, Austrian Branch

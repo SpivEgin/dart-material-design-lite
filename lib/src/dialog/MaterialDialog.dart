@@ -14,6 +14,8 @@ enum MdlDialogStatus {
 /// Called if ESC is pressed or if the user clicks on the backdrop-Container
 typedef void OnCloseCallback(final MaterialDialog dialog, final MdlDialogStatus status);
 
+//final MdlAnimation openAnimation = new MdlAnimation.fromStock(StockAnimation.BounceInBottom);
+
 /// Store strings for class names defined by this component that are used in
 /// Dart. This allows us to simply change it in one place should we
 /// decide to modify at a later date.
@@ -66,13 +68,17 @@ class DialogConfig {
     /// Sets the [MdlAnimation] if the user clicks on close or if the dialog has and "auto-close" timer
     final MdlAnimation closeAnimation;
 
+    /// Sets the open-[MdlAnimation]
+    final MdlAnimation openAnimation;
+
     DialogConfig({ final String rootTagInTemplate: "mdl-dialog",
                    final bool closeOnBackDropClick: true,
                    final bool acceptEscToClose: true,
                    final String parentSelector: _DEFAULT_PARENT_SELECTOR,
                    final bool autoClosePossible: false,
                    final bool appendNewDialog: false,
-                   final MdlAnimation closeAnimation: null })
+                   final MdlAnimation closeAnimation: null,
+                   final MdlAnimation openAnimation: null })
 
     : this.rootTagInTemplate = rootTagInTemplate,
       this.closeOnBackDropClick = closeOnBackDropClick,
@@ -80,7 +86,8 @@ class DialogConfig {
       this.parentSelector = parentSelector,
       this.autoClosePossible = autoClosePossible,
       this.appendNewDialog = appendNewDialog,
-      this.closeAnimation = closeAnimation {
+      this.closeAnimation = closeAnimation,
+      this.openAnimation = openAnimation ?? new MdlAnimation.fromStock(StockAnimation.BounceInBottom) {
 
         Validate.notBlank(rootTagInTemplate);
     }
@@ -126,8 +133,25 @@ abstract class MaterialDialog extends Object with TemplateComponent, MdlEventLis
 
     /// The returned Future informs about how the dialog was closed
     /// If {timeout} is set - the corresponding dialog closes automatically after this period
-    /// The callback {dialogIDCallback} can be given to find out the dialogID - useful for Toast that needs confirmation
-    Future<MdlDialogStatus> show({ final Duration timeout,void dialogIDCallback(final String dialogId) }) {
+    /// The callback {onDialogInit} can be given to find out the dialogID - useful for Toast that needs confirmation
+    ///
+    /// Sample for overriding "onDialogInit"
+    ///     @Component
+    ///     class SetTimeFrameDialog extends MaterialDialog {
+    ///     ...
+    ///         @override
+    ///         Future<MdlDialogStatus> show({
+    ///             final Duration timeout, Future onDialogInit(final String dialogId)}) {
+    ///             return super.show(onDialogInit: _init);
+    ///         }
+    ///
+    ///         ...
+    ///
+    ///         Future _init(final String dialogID) async {
+    ///             ...
+    ///         }
+    ///
+    Future<MdlDialogStatus> show({ final Duration timeout, Future onDialogInit(final String dialogId) }) {
         Validate.isTrue(_completer == null || _completer.isCompleted);
 
         _logger.fine("start MaterialDialog#show...");
@@ -166,28 +190,39 @@ abstract class MaterialDialog extends Object with TemplateComponent, MdlEventLis
                 dialogComponent.parentScope = this;
             }
 
-            if(dialogIDCallback != null) {
-                dialogIDCallback(hashCode.toString());
+            void _finalizeDialog() {
+                //dialog.style.left = "calc(50% - ${dialog.clientWidth ~/ 2}px)";
+                //dialog.style.top = "calc(50% - ${dialog.clientHeight ~/ 2}px)";
+
+                if(_config.acceptEscToClose) {
+                    _addEscListener();
+                }
+                if(timeout != null && _config.autoClosePossible == true) {
+                    _startTimeoutTimer(timeout);
+                }
+
+                final dom.HtmlElement elementWithAutoFocus = dialog.querySelector("[autofocus]");
+                if(elementWithAutoFocus != null) {
+                    elementWithAutoFocus.focus();
+                }
+
+                _dialogContainer.classes.remove(_cssClasses.IS_HIDDEN);
+                _dialogContainer.classes.remove(_cssClasses.APPENDING);
+                _dialogContainer.classes.add(_cssClasses.IS_VISIBLE);
+                
+                _config.openAnimation(dialog).then((_) {
+                    AnimationState.setState(dialog, AnimationState.last);
+                });
+
+                idCounter++;
+                _logger.info("show end (Dialog is rendered, got ID: ${_elementID})!");
             }
 
-            _dialogContainer.classes.remove(_cssClasses.IS_HIDDEN);
-            _dialogContainer.classes.add(_cssClasses.IS_VISIBLE);
-            _dialogContainer.classes.remove(_cssClasses.APPENDING);
-
-            if(_config.acceptEscToClose) {
-                _addEscListener();
+            if(onDialogInit != null) {
+                onDialogInit(hashCode.toString()).then( (_) => _finalizeDialog());
+            } else {
+                _finalizeDialog();
             }
-            if(timeout != null && _config.autoClosePossible == true) {
-                _startTimeoutTimer(timeout);
-            }
-
-            final dom.HtmlElement elementWithAutoFocus = dialog.querySelector("[autofocus]");
-            if(elementWithAutoFocus != null) {
-                elementWithAutoFocus.focus();
-            }
-
-            idCounter++;
-            _logger.fine("show end (Dialog is rendered, got ID: ${_elementID})!");
         });
 
         return _completer.future;
@@ -254,7 +289,12 @@ abstract class MaterialDialog extends Object with TemplateComponent, MdlEventLis
         if(_config.closeAnimation != null && _element != null) {
 
             final MdlAnimation animation = _config.closeAnimation;
-            return animation(_element).then((_) => _destroy(status));
+            
+            AnimationState.removeAllStatesFrom(dialog);
+            return animation(_element).then((_) {
+                AnimationState.setState(dialog, AnimationState.closed);
+                _destroy(status);
+            });
 
         } else {
             return new Future.delayed(new Duration(milliseconds: 200), () {
@@ -302,7 +342,7 @@ abstract class MaterialDialog extends Object with TemplateComponent, MdlEventLis
 
         } else {
 
-            _logger.info("Could not find element with ID: ${_elementSelector}");
+            _logger.fine("Could not find element with ID: ${_elementSelector}");
             _destroyContainer();
             _callCallbacksAndQuit();
         }
@@ -332,10 +372,10 @@ abstract class MaterialDialog extends Object with TemplateComponent, MdlEventLis
         container.onClick.listen((final dom.MouseEvent event) {
             _logger.info("click on container");
 
-            event.preventDefault();
-            event.stopPropagation();
-
             if (event.target == container) {
+                event.preventDefault();
+                event.stopPropagation();
+
                 close(MdlDialogStatus.CLOSED_BY_BACKDROPCLICK);
             }
         });
@@ -386,7 +426,7 @@ abstract class MaterialDialog extends Object with TemplateComponent, MdlEventLis
     }
 
     Future _render() {
-        final TemplateRenderer templateRenderer = componentFactory().injector.get(TemplateRenderer);
+        final TemplateRenderer templateRenderer = componentFactory().injector.getInstance(TemplateRenderer);
 
         return templateRenderer.render(_dialogContainer,this,
             () => template,replaceNode: !_config.appendNewDialog);

@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 (function() {
   'use strict';
 
@@ -83,7 +82,7 @@
       // Different name == different group, so no point updating those.
       if (button.getAttribute('name') === this.btnElement_.getAttribute('name')) {
         if (typeof radios[i]['MaterialRadio'] !== 'undefined') {
-            radios[i]['MaterialRadio'].updateClasses_();
+          radios[i]['MaterialRadio'].updateClasses_();
         }
       }
     }

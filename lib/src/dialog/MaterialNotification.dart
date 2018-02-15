@@ -8,8 +8,6 @@ class _MaterialNotificationCssClasses {
     const _MaterialNotificationCssClasses();
 }
 
-final MdlAnimation shrinkNotification = new MdlAnimation.fromStock(StockAnimation.MoveUpAndDisappear);
-
 class _NotificationConfig extends DialogConfig {
     static const _MaterialNotificationCssClasses _cssClasses = const _MaterialNotificationCssClasses();
 
@@ -19,7 +17,7 @@ class _NotificationConfig extends DialogConfig {
         autoClosePossible: true,
         appendNewDialog: true,
         acceptEscToClose: false,
-        closeAnimation: shrinkNotification
+        closeAnimation: new MdlAnimation.fromStock(StockAnimation.MoveUpAndDisappear)
     );
 }
 
@@ -28,7 +26,7 @@ enum NotificationType {
 }
 
 /// MaterialNotification
-@MdlComponentModel @di.Injectable()
+@Component
 class MaterialNotification extends MaterialDialog {
     static final Logger _logger = new Logger('mdldialog.MaterialNotification');
 
@@ -78,7 +76,7 @@ class MaterialNotification extends MaterialDialog {
         this.type = type;
         this.title = title;
         this.subtitle = subtitle;
-        this.content = content;
+        this.content = content.replaceAll(new RegExp("\n",multiLine: true),"<br>");
 
         if(type == NotificationType.ERROR || type == NotificationType.WARNING) {
             timeout = LONG_DELAY;
@@ -99,7 +97,7 @@ class MaterialNotification extends MaterialDialog {
 
     @override
     // TODO: Params are not used - change parent function...
-    Future<MdlDialogStatus> show({ final Duration timeout,void dialogIDCallback(final String dialogId) }) {
+    Future<MdlDialogStatus> show({ final Duration timeout,void onDialogInit(final String dialogId) }) {
         return super.show(timeout: (_autoClose == true ? new Duration(milliseconds: this.timeout ): null ));
     }
 

@@ -106,6 +106,13 @@
                 font-size: 24px;
                 min-width: 32px;
             }
+
+            .mdl-button--icon {
+                min-width: 32px;
+                .material-icons {
+                    left: 12px;
+                }
+            }
         }
 
     }
@@ -123,6 +130,9 @@
         margin          : 8px 8px 0 8px;
         width           : calc(100% - 16px);
 
+        .mdl-form__actions__spacer {
+            flex-grow: 1;
+        }
         //border: 1px solid blue;
 
         > * {
